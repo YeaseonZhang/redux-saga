@@ -10,6 +10,10 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
     check(channel, is.channel, 'options.channel passed to the Saga middleware is not a channel')
   }
 
+  /**
+   * redux中间件标准写法
+   * ({dispatch, getState}) => next => action { return next(action) }
+   **/
   function sagaMiddleware({ getState, dispatch }) {
     boundRunSaga = runSaga.bind(null, {
       ...options,

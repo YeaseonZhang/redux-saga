@@ -182,8 +182,8 @@ export function multicastChannel() {
   }
 
   return {
-    [MULTICAST]: true,
-    put(input) {
+    [MULTICAST]: true, // symbol
+    put(input) { // 执行相应的回调函数
       if (process.env.NODE_ENV !== 'production') {
         checkForbiddenStates()
         check(input, is.notUndef, UNDEFINED_INPUT_ERROR)
@@ -209,7 +209,7 @@ export function multicastChannel() {
         }
       }
     },
-    take(cb, matcher = matchers.wildcard) {
+    take(cb, matcher = matchers.wildcard) { // 将回调函数存入nextTakers
       if (process.env.NODE_ENV !== 'production') {
         checkForbiddenStates()
       }
@@ -238,6 +238,7 @@ export function stdChannel() {
       put(input)
       return
     }
+    // asap 调度策略，存放一个quene，然后每次只允许一个任务执行
     asap(() => {
       put(input)
     })
