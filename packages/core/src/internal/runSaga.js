@@ -66,6 +66,7 @@ export function runSaga(
       }
     }
   } else {
+    // identity = v => v
     finalizeRunEffect = identity
   }
 

@@ -161,6 +161,7 @@ export default function proc(env, iterator, parentContext, parentEffectId, meta,
       We can't cancel an already completed effect
       And We can't complete an already cancelled effectId
     **/
+   // 完成和取消是互斥的，且状态不可逆
     let effectSettled
 
     // Completion callback passed to the appropriate effect runner

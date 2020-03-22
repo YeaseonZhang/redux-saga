@@ -17,7 +17,7 @@ Hints:
 
 export function channel(buffer = buffers.expanding()) {
   let closed = false
-  let takers = []
+  let takers = [] // 存放cb
 
   if (process.env.NODE_ENV !== 'production') {
     check(buffer, is.buffer, INVALID_BUFFER)
@@ -44,6 +44,7 @@ export function channel(buffer = buffers.expanding()) {
     if (takers.length === 0) {
       return buffer.put(input)
     }
+    // 执行第一个 task
     const cb = takers.shift()
     cb(input)
   }
@@ -87,7 +88,7 @@ export function channel(buffer = buffers.expanding()) {
     if (closed) {
       return
     }
-
+    // 为closed状态不允许 put 操作了
     closed = true
 
     const arr = takers
@@ -107,6 +108,7 @@ export function channel(buffer = buffers.expanding()) {
   }
 }
 
+// eventChannel 没有put方法
 export function eventChannel(subscribe, buffer = buffers.none()) {
   let closed = false
   let unsubscribe
@@ -230,6 +232,8 @@ export function multicastChannel() {
   }
 }
 
+
+// 修改了multicastChannel的put方法
 export function stdChannel() {
   const chan = multicastChannel()
   const { put } = chan

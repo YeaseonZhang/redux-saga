@@ -85,6 +85,7 @@ function runPutEffect(env, { channel, action, resolve }, cb) {
 
 function runTakeEffect(env, { channel = env.channel, pattern, maybe }, cb) {
   const takeCb = input => {
+    // input 即 action
     if (input instanceof Error) {
       cb(input, true)
       return

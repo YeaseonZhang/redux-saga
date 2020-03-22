@@ -31,6 +31,7 @@ function ringBuffer(limit = 10, overflowAction) {
     }
   }
 
+  // 弹出队列的所有元素，设置为初始状态
   const flush = () => {
     let items = []
     while (length) {

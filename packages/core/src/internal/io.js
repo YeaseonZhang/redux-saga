@@ -16,6 +16,8 @@ const makeEffect = (type, payload) => ({
   payload,
 })
 
+// 以下所有effect都是返回一个`makeEffect`产生的对象
+
 const isForkEffect = eff => is.effect(eff) && eff.type === effectTypes.FORK
 
 export const detach = eff => {
@@ -48,7 +50,12 @@ export const takeMaybe = (...args) => {
   eff.payload.maybe = true
   return eff
 }
-
+/**
+ * 
+ * 两种使用方式
+ * put(action)
+ * put(channel, action)
+ */
 export function put(channel, action) {
   if (process.env.NODE_ENV !== 'production') {
     if (arguments.length > 1) {
@@ -73,6 +80,7 @@ export const putResolve = (...args) => {
   return eff
 }
 
+// all, race effect 设置 combinator = true
 export function all(effects) {
   const eff = makeEffect(effectTypes.ALL, effects)
   eff.combinator = true
@@ -118,7 +126,7 @@ const validateFnDescriptor = (effectName, fnDescriptor) => {
 function getFnCallDescriptor(fnDescriptor, args) {
   let context = null
   let fn
-
+  // 分析 fnDescriptor，判断类型
   if (is.func(fnDescriptor)) {
     fn = fnDescriptor
   } else {
@@ -148,6 +156,7 @@ export function call(fnDescriptor, ...args) {
     )
     validateFnDescriptor('call', fnDescriptor)
   }
+  // 注：入参转换：下方 args 为数组对象即 [args], ...args为args
   return makeEffect(effectTypes.CALL, getFnCallDescriptor(fnDescriptor, args))
 }
 
@@ -272,4 +281,8 @@ export function setContext(props) {
   return makeEffect(effectTypes.SET_CONTEXT, props)
 }
 
+/**
+ * 预设参数 delayP
+ * delayP的实现就是通过promise和setTimeout实现延时
+ */
 export const delay = call.bind(null, delayP)

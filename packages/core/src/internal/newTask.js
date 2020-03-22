@@ -36,6 +36,7 @@ export default function newTask(env, mainTask, parentContext, parentEffectId, me
     if (status === RUNNING) {
       // Setting status to CANCELLED does not necessarily mean that the task/iterators are stopped
       // effects in the iterator's finally block will still be executed
+      // 设置cancelled不意味已经停止，finally还是会执行的
       status = CANCELLED
       queue.cancelAll()
       // Ending with a TASK_CANCEL will propagate the Cancellation to all joiners

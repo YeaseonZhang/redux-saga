@@ -15,6 +15,8 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
    * ({dispatch, getState}) => next => action { return next(action) }
    **/
   function sagaMiddleware({ getState, dispatch }) {
+    // bind 使 runSaga 有预设参数，参考如下文档
+    // https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
     boundRunSaga = runSaga.bind(null, {
       ...options,
       context,
@@ -28,8 +30,9 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
       if (sagaMonitor && sagaMonitor.actionDispatched) {
         sagaMonitor.actionDispatched(action)
       }
+      // 先触发reducer，再处理action，所以side effect滞后于reducer
       const result = next(action) // hit reducers
-      channel.put(action)
+      channel.put(action) // saga监听action的起点
       return result
     }
   }
