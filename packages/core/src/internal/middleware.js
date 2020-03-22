@@ -37,6 +37,7 @@ export default function sagaMiddlewareFactory({ context = {}, channel = stdChann
     }
   }
 
+  // 实际上等价于调用 runSaga
   sagaMiddleware.run = (...args) => {
     if (process.env.NODE_ENV !== 'production' && !boundRunSaga) {
       throw new Error('Before running a Saga, you must mount the Saga middleware on the Store using applyMiddleware')
